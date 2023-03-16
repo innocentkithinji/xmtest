@@ -30,9 +30,9 @@ type (
 func (u userService) generateAccessCreds(user *entity.User) (*entity.LoginCredentials, error) {
 	log.Printf("User data %+v", user)
 	claims := &entity.JWTClaims{
-		user.Email,
-		user.ID,
-		jwt.RegisteredClaims{
+		Email: user.Email,
+		UID:   user.ID,
+		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 48)),
 		},
 	}

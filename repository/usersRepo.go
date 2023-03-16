@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -33,7 +32,7 @@ func (u usersRepo) Get(id string) (*entity.User, error) {
 	var user entity.User
 	if err := u.collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&user); err != nil {
 		log.Printf("User with ID(%s) was not found", id)
-		return nil, errors.New(fmt.Sprintf("User with ID(%s) was not found", id))
+		return nil, fmt.Errorf("User with ID(%s) was not found", id)
 	}
 
 	return &user, nil

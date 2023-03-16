@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -47,9 +46,6 @@ func (c companyRepo) Filter(filters map[string]interface{}) (*entity.Company, er
 }
 
 func (c companyRepo) Emit(kafkaURI string, event string, value string) error {
-	if kafkaURI == "" {
-		kafkaURI = viper.Get("KAFKA_URI").(string)
-	}
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
@@ -96,7 +92,7 @@ func (c companyRepo) Get(id string) (*entity.Company, error) {
 	var company entity.Company
 	if err := c.collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&company); err != nil {
 		log.Printf("Company with ID(%s) was not found", id)
-		return nil, errors.New(fmt.Sprintf("Company with ID(%s) was not found", id))
+		return nil, fmt.Errorf("Company with ID(%s) was not found", id)
 	}
 
 	return &company, nil
